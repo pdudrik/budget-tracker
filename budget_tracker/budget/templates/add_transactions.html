@@ -1,0 +1,21 @@
+{% extends "layout.html" %}
+
+
+{% block title %}Add transaction{% endblock title %}
+{% block heading %}Add Transaction{% endblock heading %}
+
+
+{% block content %}
+    <form method="post">
+        {% csrf_token %}
+
+        {% if form.errors %}
+            <div class="container bg-danger">
+                {{ form.errors }}
+            </div>
+        {% endif %}
+
+        {{ form.as_p }}
+        <button type="submit">Save</button>
+    </form>
+{% endblock content %}

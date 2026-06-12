@@ -1,0 +1,80 @@
+{% extends "layout.html" %}
+
+
+{% block title %}Transactions{% endblock title %}
+{% block heading %}Transactions{% endblock heading %}
+{% block head %}
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/transactions.css' %}">
+{% endblock head %}
+
+
+{% block content %}
+    <div class="container">
+        <a class="btn btn-primary" href="{% url 'budget:add_transaction' %}">ADD</a>
+    </div>
+
+    <div class="container">
+
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th scope="col">Date</th>
+                    <th scope="col">Amount</th>
+                    <th scope="col">Category</th>
+                    <th scope="col">Subcategory</th>
+                    <th scope="col">Note</th>
+                    <th scope="col">Options</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for record in records %}
+                    <tr>
+                        <td>{{ record.date }}</td>
+                        <td>{{ record.amount }}</td>
+                        <td>{{ record.category }}</td>
+                        <td>{{ record.subcategory }}</td>
+                        <td>{{ record.note }}</td>
+                        <td>
+                            <a href="{% url 'budget:update_transaction' pk=record.id %}" class="btn btn-primary">UPDATE</a>
+                            <form
+                                action="{% url 'budget:delete_transaction' pk=record.id %}"
+                                method="post"
+                                onsubmit="return confirm('Do you really want to delete selected transaction?')"
+                                class="delete-btn">
+                                {% csrf_token %}
+                                <button class="btn btn-danger" type="submit">DELETE</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% empty %}
+                    <p>No records found.</p>
+                {% endfor %}
+            </tbody>
+        </table>
+        
+        {% if is_paginated %}
+            <div class="pagination">
+                <span class="step-links">
+                    <!-- Link to the first and previous pages if they exist -->
+                    {% if page_obj.has_previous %}
+                        <a href="?page=1">&laquo; first</a>
+                        <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+                    {% endif %}
+                    
+                    <!-- Current page status display -->
+                    <span class="current">
+                        Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+                    </span>
+                    
+                    <!-- Link to the next and last pages if they exist -->
+                    {% if page_obj.has_next %}
+                        <a href="?page={{ page_obj.next_page_number }}">next</a>
+                        <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+                    {% endif %}
+                </span>
+            </div>
+        {% endif %}
+    
+    </div>
+{% endblock content %}

@@ -1,0 +1,46 @@
+{% extends "layout.html" %}
+
+
+{% block title %}Settings{% endblock title %}
+{% block heading %}Settings{% endblock heading %}
+
+
+
+{% block content %}
+    <div class="container">
+        <h3>Category</h3>
+        <form method="post" class="api-form">
+            {% csrf_token %}
+            {{ create_category_form.as_p }}
+            <button
+                type="submit"
+                name="submit_category"
+                data-endpoint="{% url 'budget:api_create_category' %}">
+                    Save
+            </button>
+        </form>
+
+        <form method="post" class="api-form">
+            {% csrf_token %}
+            {{ update_category_form.as_p }}
+            <button
+                type="submit"
+                name="delete_category"
+                data-endpoint="{% url 'budget:api_delete_category' %}">
+                    Delete
+            </button>
+            <button
+                type="submit"
+                name="update_category"
+                data-endpoint="{% url 'budget:api_update_category' %}">
+                    Save
+            </button>
+        </form>
+    </div>
+{% endblock content %}
+
+
+{% block script %}
+    {% load static %}
+    <script src="{% static 'js/settings.js' %}"></script>
+{% endblock script %}
