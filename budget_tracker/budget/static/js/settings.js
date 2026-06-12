@@ -48,9 +48,11 @@ forms.forEach(function(currentForm) {
             console.log("Success package received for this form: ", data);
             currentForm.reset();
 
-            updateCategoryDropdown(data.categories);
-            document.getElementById("id_update_category-name").value = "";
-
+            var target = targetURL.split("/").filter(Boolean)[2];
+            if (target === "category") {
+                updateCategoryDropdown(data.categories);
+                document.getElementById("id_update_category-name").value = "";
+            }
         })
         .catch(errorPackage => {
             console.log("Validation failed or server error: ", errorPackage);

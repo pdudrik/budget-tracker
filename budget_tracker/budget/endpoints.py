@@ -33,12 +33,11 @@ def create_category(request):
         prefix="create_category"
     )
     if form.is_valid():
-        category = form.save()
+        form.save()
     
         return JsonResponse(
             {
                 "status": "success",
-                # "created_category_id": category.id,
                 "categories": get_all_categories()
             }
         )
@@ -94,8 +93,6 @@ def update_category(request):
     category.name = new_name
     category.save()
 
-    # all_categories = Category.objects.all().order_by("name")
-    # category_list = [{"id": cat.id, "name": cat.name} for cat in all_categories]
     category_list = []
     for cat in Category.objects.all().order_by("name"):
         category_list.append(
@@ -124,9 +121,7 @@ def delete_category(request):
             status=405
         )
     
-    print(request.POST)
     category_id = request.POST.get("update_category-category_select")
-    print(f"Category ID: {category_id}")
     if not category_id:
         return JsonResponse(
             {
@@ -137,8 +132,8 @@ def delete_category(request):
         )
     
     try:
-        category = Category.objects.get(id=category_id)
         print(f"Category: {category}")
+        category = Category.objects.get(id=category_id)
         category.delete()
 
     except Category.DoesNotExist:
