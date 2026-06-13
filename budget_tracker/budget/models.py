@@ -34,6 +34,13 @@ class Subcategory(models.Model):
         ordering = ["category", "name"]
         verbose_name_plural = "Subcategories"
         unique_together = ("name", "category")      # prevents having same category and subcategory name
+        # within category there must be only unique subcategories
+        constraints = [
+            models.UniqueConstraint(
+                fields=["category", "name"],
+                name='unique_subcategory_per_category'
+            )
+        ]
     
     def __str__(self):
         return f"{self.category.name} -> {self.name}"

@@ -1,10 +1,10 @@
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
-from django.views.generic import ListView, CreateView, DeleteView,  \
+from django.views.generic import ListView, CreateView, DeleteView,      \
     UpdateView, View, TemplateView
-from .models import Transaction
-from .forms import TransactionForm, CreateCategoryForm,             \
-    UpdateCategoryForm
+from .models import Transaction, Subcategory
+from .forms import TransactionForm, CreateCategoryForm,                 \
+    UpdateCategoryForm, CreateSubcategoryForm, UpdateSubcategoryForm    \
 
 
 # Create your views here.
@@ -48,7 +48,14 @@ class SettingsView(TemplateView):
 
     def get(self, request, *args, **kwargs):
         context = self.get_context_data(**kwargs)
+
+        subcategories = Subcategory.objects.all().values("id", "name", "category_id")
+
         context["create_category_form"] = CreateCategoryForm(prefix="create_category")
         context["update_category_form"] = UpdateCategoryForm(prefix="update_category")
-
+        context["create_subcategory_form"] = CreateSubcategoryForm(prefix="create_subcategory")
+        context["update_subcategory_form"] = UpdateSubcategoryForm(prefix="update_subcategory")
+        context["data_json"] = {
+            "subcategories": list(subcategories)
+        }
         return self.render_to_response(context)

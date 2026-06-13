@@ -37,6 +37,105 @@
             </button>
         </form>
     </div>
+
+    <hr>
+
+    <div class="container">
+        <h3>Subcategory</h3>
+        <form method="post" class="api-form">
+            {% csrf_token %}
+            {{ create_subcategory_form.as_p }}
+            <button
+                type="submit"
+                name="submit_subcategory"
+                data-endpoint="{% url 'budget:api_create_subcategory' %}">
+                    Save
+            </button>
+        </form>
+
+        <br>
+
+        <div class="container">
+            <button
+                type="button"
+                class="btn btn-primary"
+                data-bs-toggle="modal"
+                data-bs-target="#subcategoryUpdateModal"
+                data-bs-whatever="@mdo">
+                    Update name
+            </button>
+
+            <div class="modal fade" id="subcategoryUpdateModal" tabindex="-1" aria-labelledby="subcategoryUpdateModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+
+                    <form method="post" class="api-form">
+                        {% csrf_token %}
+                        <div class="modal-content">
+                            
+                            <div class="modal-header">
+                                <h1 class="modal-title fs-5" id="subcategoryUpdateModalLabel">Update subcategory name</h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+
+                            <div class="modal-body">                    
+                                {{ data_json.subcategories|json_script:"subcategories-data" }}
+
+                                <!-- {{ update_subcategory_form.category.label }}:
+                                {{ update_subcategory_form.category }}
+                                <br>
+                                {{ update_subcategory_form.subcategory_select.label }}:
+                                {{ update_subcategory_form.subcategory_select }}
+                                <br>
+                                <br>
+                                <p>
+                                    New name: 
+                                    <span class="ms-1">
+                                        {{ update_subcategory_form.name }}
+                                    </span>
+                                </p> -->
+                                
+                                {{ update_subcategory_form.as_p }}
+
+                            </div>
+
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button
+                                    class="btn btn-primary"
+                                    type="submit"
+                                    name="update_subcategory"
+                                    data-endpoint="{% url 'budget:api_update_subcategory' %}">
+                                        Save
+                                </button>
+                            </div>
+
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+            
+        </div>
+
+        <!-- <form method="post" class="api-form">
+            {% csrf_token %}
+            {{ update_subcategory_form.as_p }}
+            <button
+                type="submit"
+                name="delete_subcategory"
+                data-endpoint="{% url 'budget:api_delete_subcategory' %}">
+                    Delete
+            </button>
+            <button
+                type="submit"
+                name="update_subcategory"
+                data-endpoint="{% url 'budget:api_update_subcategory' %}">
+                    Save
+            </button>
+        </form> -->
+
+
+    </div>
 {% endblock content %}
 
 

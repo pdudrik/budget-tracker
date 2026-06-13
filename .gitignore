@@ -2,4 +2,5 @@
 budget_tracker/db.sqlite3
 budget_tracker/budget/__pycache__/
 budget_tracker/budget_tracker/__pycache__/
+budget_tracker/budget/migrations/__pycache__/
 .env
