@@ -56,20 +56,6 @@ class CreateSubcategoryForm(forms.ModelForm):
         ]
 
 
-# class UpdateSubcategoryForm(forms.ModelForm):
-#     subcategory_select = SubcategoryChoiceField(
-#         queryset=Subcategory.objects.all(),
-#         empty_label="-- Select subcategory --"
-#     )
-
-#     class Meta:
-#         model = Subcategory
-#         fields = [
-#             "name",
-#             "category"
-#         ]
-
-
 class UpdateSubcategoryForm(forms.Form):
     category = forms.ModelChoiceField(
         queryset=Category.objects.all(),
@@ -99,5 +85,59 @@ class UpdateSubcategoryForm(forms.Form):
                 'class': 'form-control',
                 'placeholder': 'Type new name here'
                 }
+        )
+    )
+
+
+class UpdateSubcategoryParentForm(forms.Form):
+    category = forms.ModelChoiceField(
+        queryset=Category.objects.all(),
+        empty_label="-- Select category --",
+        widget=forms.Select(
+            attrs={
+                "class": "form-select"
+            }
+        )
+    )
+
+    subcategory = SubcategoryChoiceField(
+        queryset=Subcategory.objects.all(),
+        empty_label="-- Select subcategory --",
+        widget=forms.Select(
+            attrs={
+                "class": "form-select"
+            }
+        )
+    )
+
+    new_category = forms.ModelChoiceField(
+        queryset=Category.objects.all(),
+        empty_label="-- Select new category --",
+        widget=forms.Select(
+            attrs={
+                "class": "form-select"
+            }
+        )
+    )
+
+
+class DeleteSubcategoryForm(forms.Form):
+    category = forms.ModelChoiceField(
+        queryset=Category.objects.all(),
+        empty_label="-- Select category --",
+        widget=forms.Select(
+            attrs={
+                "class": "form-select"
+            }
+        )
+    )
+
+    subcategory = forms.ModelChoiceField(
+        queryset=Subcategory.objects.all(),
+        empty_label="-- Select subcategory --",
+        widget=forms.Select(
+            attrs={
+                "class": "form-select"
+            }
         )
     )

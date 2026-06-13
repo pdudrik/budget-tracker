@@ -4,8 +4,8 @@ from django.views.generic import ListView, CreateView, DeleteView,      \
     UpdateView, View, TemplateView
 from .models import Transaction, Subcategory
 from .forms import TransactionForm, CreateCategoryForm,                 \
-    UpdateCategoryForm, CreateSubcategoryForm, UpdateSubcategoryForm    \
-
+    UpdateCategoryForm, CreateSubcategoryForm, UpdateSubcategoryForm,   \
+    UpdateSubcategoryParentForm, DeleteSubcategoryForm
 
 # Create your views here.
 def home(request):
@@ -55,6 +55,8 @@ class SettingsView(TemplateView):
         context["update_category_form"] = UpdateCategoryForm(prefix="update_category")
         context["create_subcategory_form"] = CreateSubcategoryForm(prefix="create_subcategory")
         context["update_subcategory_form"] = UpdateSubcategoryForm(prefix="update_subcategory")
+        context["update_subcategory_parent_form"] = UpdateSubcategoryParentForm(prefix="update_subcategory_parent")
+        context["delete_subcategory_form"] = DeleteSubcategoryForm(prefix="delete_subcategory")
         context["data_json"] = {
             "subcategories": list(subcategories)
         }

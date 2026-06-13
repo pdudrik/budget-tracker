@@ -1,7 +1,8 @@
 from django.http import JsonResponse
 from django.core.exceptions import ObjectDoesNotExist
 from .forms import CreateCategoryForm, UpdateCategoryForm,          \
-    CreateSubcategoryForm, UpdateSubcategoryForm
+    CreateSubcategoryForm, UpdateSubcategoryForm,                   \
+    UpdateSubcategoryParentForm, DeleteSubcategoryForm
 from .models import Category, Subcategory
 
 
@@ -208,10 +209,6 @@ def update_subcategory(request):
         prefix="update_subcategory"
     )
     print(f"form: {form}\n\n\n")
-    # print(f"category: {form.cleaned_data["category"]}")
-    # print(f"subcategory_select: {form.cleaned_data["subcategory_select"]}")
-    # print(f"target subcategory ID: {form.cleaned_data["id"]}")
-    # print(f"new name: {form.cleaned_data["name"]}")
 
     if not form.is_valid():
         return JsonResponse(
@@ -223,13 +220,7 @@ def update_subcategory(request):
         )
 
     subcategory = form.cleaned_data["subcategory"]      # "subcategory" is prefix
-    # subcategory = form.cleaned_data["subcategory_select"]
-    # parent_category = form.cleaned_data["category"]
     new_name = form.cleaned_data["name"]
-
-    print(f"Subcategory: {subcategory}")
-    print(f"New name: {new_name}")
-
     print(f"subcategory \"{subcategory.name}\" will be renamed to \"{new_name}\"")
 
     if subcategory.name == new_name:
@@ -269,15 +260,6 @@ def update_subcategory(request):
 
     subcategory.name = new_name
     subcategory.save()
-
-    # category_list = []
-    # for cat in Category.objects.all().order_by("name"):
-    #     category_list.append(
-    #         {
-    #             "id": cat.id,
-    #             "name": cat.name
-    #         }
-    #     )
     
     return JsonResponse(
         {
@@ -287,47 +269,89 @@ def update_subcategory(request):
             "categories": None
         }
     )
+
+
+def update_subcategory_parent(request):
+    if request.method != "POST":
+        return JsonResponse(
+            {
+                "status": "error",
+                "message": "Method not allowed"
+            },
+            status=405
+        )
+
+    form = UpdateSubcategoryParentForm(
+        request.POST,
+        prefix="update_subcategory_parent"
+    )
+
+    if not form.is_valid():
+        return JsonResponse(
+            {
+                "status": "error",
+                "errors": form.errors
+            },
+            status=400
+        )
+
+    subcategory = form.cleaned_data["subcategory"]      # "subcategory" is form prefix
+    new_parent = form.cleaned_data["new_category"]
+    print(f"subcategory \"{subcategory.name}\" will be moved from \"{subcategory.category.name}\" to \"{new_parent.name}\"")
+
+    if subcategory.category.name == new_parent.name:
+        return JsonResponse(
+        {
+            "status": "success",
+            "message": "New category name is same!",
+        }
+    )
+
+    subcategory.category = new_parent
+    subcategory.save()
     
+    return JsonResponse(
+        {
+            "status": "success",
+            "message": "Subcategory parent changed successfully!",
+            "categories": None
+        }
+    )
+
 
 def delete_subcategory(request):
-    pass
-#     if request.method != "POST":
-#         return JsonResponse(
-#             {
-#                 "status": "error",
-#                 "message": "Method not allowed"
-#             },
-#             status=405
-#         )
-    
-#     category_id = request.POST.get("update_category-category_select")
-#     if not category_id:
-#         return JsonResponse(
-#             {
-#                 "status": "error",
-#                 "message": "Category missing ID!"
-#             },
-#             status=400
-#         )
-    
-#     try:
-#         print(f"Category: {category}")
-#         category = Category.objects.get(id=category_id)
-#         category.delete()
+    if request.method != "POST":
+        return JsonResponse(
+            {
+                "status": "error",
+                "message": "Method not allowed"
+            },
+            status=405
+        )
 
-#     except Category.DoesNotExist:
-#         return JsonResponse(
-#             {
-#                 "status": "error",
-#                 "message": "Category not found or no longer exists!"
-#             },
-#             status=404
-#         )
+    form = DeleteSubcategoryForm(
+        request.POST,
+        prefix="delete_subcategory"
+    )
 
-#     return JsonResponse(
-#         {
-#             "status": "success",
-#             "message": "Category deleted successfully!",
-#             "categories": get_all_categories()
-#         }
-#     )
+    if not form.is_valid():
+        return JsonResponse(
+            {
+                "status": "error",
+                "errors": form.errors
+            },
+            status=400
+        )
+
+    target_subcategory = form.cleaned_data["subcategory"]
+    print(f"Subcategory ID: {target_subcategory.id}")
+    target_subcategory.delete()
+
+
+    return JsonResponse(
+        {
+            "status": "success",
+            "message": "Subcategory successfully deleted!"
+        },
+        status=200
+    )

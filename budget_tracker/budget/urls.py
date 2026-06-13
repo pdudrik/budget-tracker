@@ -17,5 +17,6 @@ urlpatterns = [
     path("settings/api/category/delete/", endpoints.delete_category, name="api_delete_category"),
     path("settings/api/subcategory/create/", endpoints.create_subcategory, name="api_create_subcategory"),
     path("settings/api/subcategory/update/", endpoints.update_subcategory, name="api_update_subcategory"),
+    path("settings/api/subcategory/update_parent/", endpoints.update_subcategory_parent, name="api_update_subcategory_parent"),
     path("settings/api/subcategory/delete/", endpoints.delete_subcategory, name="api_delete_subcategory"),
 ]
